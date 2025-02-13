@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>AI Note Taker</title>
     <meta property="og:title" content="AI Note Taker">
-    <meta property="og:description" content="Summarize and create notes from audio transcripts using AI.">
+    <meta property="og:description" content="Generate and refine audio transcripts using AI.">
     <meta name="theme-color" content="#1c1e22">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,7 +59,7 @@
                     <div class="heading">Choose an audio/video file</div>
                 </div>
                 <div class="flex col gap-8">
-                    <div class="description">Choose the audio/video file you want to summarize. Note that in the case of video files, only the audio is used.</div>
+                    <div class="description">Choose the audio/video file you want to transcribe. Note that in the case of video files, only the audio is used.</div>
                     <div class="description"><b>Files up to 25 MB are accepted.</b><br>Use tools like ffmpeg to extract and compress audio from videos or large files.</div>
                 </div>
                 <div class="flex row gap-12 align-center">
@@ -81,7 +81,7 @@
                 </div>
                 <div class="flex col gap-8">
                     <div class="description">Click the transcribe button to generate a text transcript of the audio from the file selected above.</div>
-                    <div class="description">If you already have a transcript and just want to summarize it, you can paste it into the box and skip the audio transcribing step.</div>
+                    <div class="description">If you already have a transcript and just want to refine it, you can paste it into the box and skip the audio transcribing step.</div>
                 </div>
                 <div class="flex row gap-12 wrap align-center">
                     <button id="startTranscription" class="btn">
@@ -106,13 +106,13 @@
             <div class="flex col gap-12">
                 <div class="flex col gap-4">
                     <div class="subheading">Step 4</div>
-                    <div class="heading">Summarize your transcript</div>
+                    <div class="heading">Refine your transcript</div>
                 </div>
                 <div class="flex col gap-8">
                     <div class="description">Instruct GPT to refine your transcript and turn it into a summary or notes that satisfy your needs.</div>
                 </div>
                 <div class="flex col gap-8">
-                    <label>Instructions for summarization</label>
+                    <label>Instructions for refinement</label>
                     <div class="textbox cont">
                         <textarea id="inputPrompt" placeholder="Tell GPT what to do with your transcript..." rows="5"></textarea>
                     </div>
@@ -126,7 +126,7 @@
                 <div class="flex row gap-12 wrap align-center">
                     <button id="summarize" class="btn">
                         <span class="material-symbol">summarize</span>
-                        <span>Summarize</span>
+                        <span>Refine</span>
                     </button>
                     <div id="loaderSummarizing" class="loader" style="scale: 0.5; margin: -12px; display: none"></div>
                 </div>
