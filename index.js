@@ -75,6 +75,7 @@ on(document, 'DOMContentLoaded', async() => {
     const btnStartTranscription = $('#startTranscription');
     const elLoaderTranscribing = $('#loaderTranscribing');
     const inputTranscript = $('#inputTranscript');
+    const btnDownloadTranscript = $('#downloadTranscript');
     const inputSummarizePrompt = $('#inputPrompt');
     const btnPromptPresets = $('#promptPresets');
     const btnSummarize = $('#summarize');
@@ -254,6 +255,10 @@ on(document, 'DOMContentLoaded', async() => {
 
     on(inputTranscript, 'change', () => {
         inputTranscript.value = inputTranscript.value.trim();
+    });
+
+    on(btnDownloadTranscript, 'click', () => {
+        downloadTextFile('transcript.txt', inputTranscript.value);
     });
 
     on(btnStartTranscription, 'click', async () => {
