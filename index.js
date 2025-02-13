@@ -84,6 +84,7 @@ on(document, 'DOMContentLoaded', async() => {
     const btnDownloadHtml = $('#downloadHtml');
     let file;
     let isWorking = false;
+    let summaryText = '';
 
     let storeInputsTimeout;
     const storeInputs = () => {
@@ -310,9 +311,8 @@ on(document, 'DOMContentLoaded', async() => {
         elLoaderSummarizing.style.display = '';
         const prompt = inputSummarizePrompt.value;
         const transcript = inputTranscript.value;
-        let text;
         try {
-            text = await gptChatComplete([
+            summaryText = await gptChatComplete([
                 {
                     role: 'developer',
                     content: `Your job is to refine an audio transcript provided by the user. They will describe the refinements they want you to make, then provide the raw text transcript. You should only respond with the refined transcript, with no added text.`
@@ -323,6 +323,7 @@ on(document, 'DOMContentLoaded', async() => {
                 }
             ]);
         } catch (error) {
+            summaryText = `Summarization failed.`;
             showModal({
                 title: 'Summarization failed',
                 bodyHTML: /*html*/`
@@ -338,14 +339,14 @@ on(document, 'DOMContentLoaded', async() => {
             });
         }
         isWorking = false;
-        elResult.innerHTML = markdownToPureHtml(text);
-        localStorageSet('summary', text);
+        elResult.innerHTML = markdownToPureHtml(summaryText);
+        localStorageSet('summary', summaryText);
         elLoaderSummarizing.style.display = 'none';
         updateButtonStates();
     });
 
     on(btnDownloadText, 'click', () => {
-        downloadTextFile('summary.md', localStorageGet('summary') || '');
+        downloadTextFile('summary.md', summaryText || '');
     });
 
     loadInputs();
