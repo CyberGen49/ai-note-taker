@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>AI Summarizer</title>
+    <meta property="og:title" content="AI Summarizer">
+    <meta property="og:description" content="Summarize and create notes from audio transcripts using AI.">
+    <meta name="theme-color" content="#1c1e22">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI Summarizer">
+    <meta property="og:image" content="/icon.png">
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.6/marked.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js" defer></script>
+    <script src="base.js" defer></script>
+    <script src="index.js" defer></script>
+</head>
+<body data-color-accent="pink">
+    <div id="main">
+        <div id="topbar" class="flex row gap-12 align-center no-shrink">
+            <div id="title" class="grow">AI Summarizer</div>
+            <button id="setColorAccent" class="btn secondary circle">
+                <span class="material-symbol outlined">palette</span>
+            </button>
+            <button id="setColorMode" class="btn secondary circle">
+                <span class="material-symbol outlined">dark_mode</span>
+            </button>
+        </div>
+        <div id="content" class="flex col gap-24">
+            <div class="flex col gap-12">
+                <div class="flex col gap-4">
+                    <div class="subheading">Step 1</div>
+                    <div class="heading">Set your OpenAI API key</div>
+                </div>
+                <div class="flex col gap-8">
+                    <div class="description">For your privacy and so you're accountable for your own inputs, you must supply your own OpenAI API key. Sign into the <a href="https://platform.openai.com/settings/organization/api-keys">OpenAI platform</a> to generate an API key, then click the button below to set it here.</div>
+                    <div class="description">Note that using this tool will cost money in accordance with <a href="https://openai.com/api/pricing/">OpenAI's API pricing</a>. See that page for details.</div>
+                    <div class="description">All requests are made from your device, so your data is only exchanged between you and OpenAI, no third party.</div>
+                </div>
+                <div>
+                    <button id="setApiKey" class="btn">
+                        <span class="material-symbol">key</span>
+                        <span>Set key...</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex col gap-12">
+                <div class="flex col gap-4">
+                    <div class="subheading">Step 2</div>
+                    <div class="heading">Choose an audio/video file</div>
+                </div>
+                <div class="flex col gap-8">
+                    <div class="description">Choose the audio/video file you want to summarize. Note that in the case of video files, only the audio is used.</div>
+                    <div class="description"><b>Files up to 25 MB are accepted.</b> Use tools like ffmpeg to extract and compress audio from videos or large files.</div>
+                </div>
+                <div class="flex row gap-12 align-center">
+                    <button id="selectFile" class="btn">
+                        <span class="material-symbol">folder_open</span>
+                        <span>Select file...</span>
+                    </button>
+                    <button id="playPause" class="btn secondary smaller square">
+                        <span class="material-symbol">play_arrow</span>
+                    </button>
+                    <audio id="audio" style="display: none"></audio>
+                    <div id="fileName">No file selected.</div>
+                </div>
+            </div>
+            <div class="flex col gap-12">
+                <div class="flex col gap-4">
+                    <div class="subheading">Step 3</div>
+                    <div class="heading">Generate a transcript</div>
+                </div>
+                <div class="flex col gap-8">
+                    <div class="description">Click the transcribe button to generate a text transcript of the audio from the file selected above.</div>
+                    <div class="description">If you already have a transcript and just want to summarize it, you can paste it into the box and skip the audio transcribing step.</div>
+                </div>
+                <div class="flex row gap-12 wrap align-center">
+                    <button id="startTranscription" class="btn">
+                        <span class="material-symbol">library_books</span>
+                        <span>Transcribe audio</span>
+                    </button>
+                    <div id="loaderTranscribing" class="loader" style="scale: 0.5; margin: -12px; display: none"></div>
+                </div>
+                <div class="flex col gap-8">
+                    <label>Transcript</label>
+                    <div class="textbox cont">
+                        <textarea id="inputTranscript" placeholder="Enter transcript or generate one with the button above..." rows="10"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="flex col gap-12">
+                <div class="flex col gap-4">
+                    <div class="subheading">Step 4</div>
+                    <div class="heading">Summarize your transcript</div>
+                </div>
+                <div class="flex col gap-8">
+                    <div class="description">Instruct GPT to refine your transcript and turn it into a summary or notes that satisfy your needs.</div>
+                </div>
+                <div class="flex col gap-8">
+                    <label>Instructions for summarization</label>
+                    <div class="textbox cont">
+                        <textarea id="inputPrompt" placeholder="Tell GPT what to do with your transcript..." rows="5"></textarea>
+                    </div>
+                    <div>
+                        <button id="promptPresets" class="btn smaller secondary">
+                            <span>Choose a prompt preset...</span>
+                            <span class="material-symbol" style="margin-top: 1px">keyboard_arrow_down</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex row gap-12 wrap align-center">
+                    <button id="summarize" class="btn">
+                        <span class="material-symbol">summarize</span>
+                        <span>Summarize</span>
+                    </button>
+                    <div id="loaderSummarizing" class="loader" style="scale: 0.5; margin: -12px; display: none"></div>
+                </div>
+            </div>
+            <div class="flex col gap-12">
+                <div class="flex col gap-4">
+                    <div class="subheading">Result</div>
+                    <div class="heading">View and download your summary</div>
+                </div>
+                <div id="resultCont">
+                    <div id="result"></div>
+                </div>
+                <div class="flex row gap-12 wrap">
+                    <button id="downloadText" class="btn secondary smaller">
+                        <span class="material-symbol">download</span>
+                        <span>Download text (markdown)</span>
+                    </button>
+                    <button id="downloadHtml" class="btn secondary smaller">
+                        <span class="material-symbol">code</span>
+                        <span>Download HTML</span>
+                    </button>
+                </div>
+                <div class="flex col gap-8">
+                    <div class="description">
+                        <b>Text downloads</b> are suitable for viewing in a text or markdown editor, while <b>HTML downloads</b> preserve formatting and are intended to be opened in your browser.
+                    </div>
+                    <div class="description">
+                        <b>HTML downloads</b> aren't available yet.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
