@@ -55,6 +55,10 @@ const promptPresets = [
     {
         name: 'Create study notes',
         prompt: `Create studyable notes from the transcript. Identify the main topic and use bullet points to list critical information and key takeaways, but don't skimp on adding extra info to enhance the understanding of the topics. Organize the notes logically, as if you took them while listening to the lecture.`
+    },
+    {
+        name: 'Convert to textbook format',
+        prompt: `Rewrite the contents of the transcript in a more formal and structured manner, suitable for a textbook. Ensure that the information is accurate and complete, and that the text is well-organized and easy to read. Add examples where necessary to supplement the concepts.`
     }
 ];
 

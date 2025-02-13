@@ -52,10 +52,6 @@
     max-height: 500px;
 }
 
-#result p:last-child {
-    margin-bottom: 0px;
-}
-
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-emphasis);
     color: var(--c-text-bold);
@@ -85,6 +81,19 @@ ul, ol {
     padding: 0px 0px 0px 1.5em;
 }
 
+h1:first-child, h2:first-child, h3:first-child,
+h4:first-child, h5:first-child, h6:first-child,
+p:first-child, li:first-child, ul:first-child,
+ol:first-child {
+    margin-top: 0px;
+}
+h1:last-child, h2:last-child, h3:last-child,
+h4:last-child, h5:last-child, h6:last-child,
+p:last-child, li:last-child, ul:last-child,
+ol:last-child {
+    margin-bottom: 0px;
+}
+
 b, strong {
     font-weight: bold;
     color: var(--c-text-bold);
@@ -94,4 +103,31 @@ hr {
     border: 0;
     border-top: 1px solid var(--c-bg-50);
     margin: 1em 0px;
+}
+
+code {
+    font-family: monospace;
+}
+code:not(pre code) {
+    padding: 2px 6px;
+    background: var(--c-code-bg);
+    border: 1px solid var(--c-code-border);
+    color: var(--c-code-text);
+    border-radius: 4px;
+    word-break: break-word;
+}
+pre {
+    border-radius: 8px;
+    background: var(--c-code-bg);
+    border: 1px solid var(--c-code-border);
+    color: var(--c-code-text);
+    overflow: hidden;
+}
+pre code {
+    display: block;
+    padding: 8px 12px;
+    max-width: 100%;
+    overflow: auto;
+    line-height: 1.4;
+    font-size: 15px;
 }

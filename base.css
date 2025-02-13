@@ -124,6 +124,9 @@ body {
     --c-sidebar-separator: var(--c-bg-70);
     --c-focus-ring: var(--c-accent-70-50);
     --c-loader: var(--c-accent-50);
+    --c-code-bg: var(--c-bg-98);
+    --c-code-border: var(--c-bg-95);
+    --c-code-text: var(--c-bg-30);
     --c-btn-primary-bg: var(--c-accent-50);
     --c-btn-primary-bg-hover: var(--c-accent-40);
     --c-btn-primary-bg-active: var(--c-accent-30);
@@ -175,6 +178,9 @@ body {
     --c-sidebar-separator: var(--c-bg-30);
     --c-focus-ring: var(--c-accent-80-50);
     --c-loader: var(--c-accent-70);
+    --c-code-bg: var(--c-bg-20);
+    --c-code-border: var(--c-bg-30);
+    --c-code-text: var(--c-bg-70);
     --c-btn-primary-bg: var(--c-accent-70);
     --c-btn-primary-bg-hover: var(--c-accent-75);
     --c-btn-primary-bg-active: var(--c-accent-80);
