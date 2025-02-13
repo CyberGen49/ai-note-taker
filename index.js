@@ -85,7 +85,7 @@ on(document, 'DOMContentLoaded', async() => {
     const btnDownloadHtml = $('#downloadHtml');
     let file;
     let isWorking = false;
-    let summaryText = '';
+    let summaryText = localStorageGet('summary') || '';
 
     let storeInputsTimeout;
     const storeInputs = () => {
@@ -99,7 +99,7 @@ on(document, 'DOMContentLoaded', async() => {
     const loadInputs = () => {
         inputTranscript.value = localStorageGet('transcript') || '';
         inputSummarizePrompt.value = localStorageGet('summarizePrompt') || '';
-        elResult.innerHTML = markdownToPureHtml(localStorageGet('summary') || 'Your generated summary will be shown here...');
+        elResult.innerHTML = markdownToPureHtml(summaryText || 'Your generated summary will be shown here...');
     };
     
     const updateButtonStates = () => {
