@@ -284,6 +284,7 @@ p:not(:last-child) {
 .btn:focus-visible:not(:disabled) {
     background: var(--c-btn-primary-bg-hover);
     transition: none;
+    text-decoration: none;
 }
 .btn:focus:not(:disabled) {
     box-shadow: none;
