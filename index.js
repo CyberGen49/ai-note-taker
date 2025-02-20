@@ -266,6 +266,13 @@ on(document, 'DOMContentLoaded', async() => {
     on(btnStartTranscription, 'click', async () => {
         isWorking = true;
         let startTime = Date.now();
+        const audioDuration = elAudio.duration || 1;
+        const transcriptionSpeed = 26;
+        const progInterval = setInterval(() => {
+            const secsSinceStart = (Date.now() - startTime) / 1000;
+            const secsRemaining = (audioDuration / transcriptionSpeed) - secsSinceStart;
+            console.log(`Transcribing ${audioDuration}s audio file - ${secsSinceStart}s elapsed, ${secsRemaining}s remaining`);
+        }, 500);
         updateButtonStates();
         elLoaderTranscribing.style.display = '';
         inputTranscript.disabled = true;
@@ -282,10 +289,10 @@ on(document, 'DOMContentLoaded', async() => {
                 `
             });
         }
-        const audioDuration = elAudio.duration || 1;
-        const transcribeTimeMs = (Date.now() - startTime) / 1000;
-        const speed = audioDuration / transcribeTimeMs;
-        console.log(`Transcription of ${audioDuration}s audio file took ${transcribeTimeMs}s - ${speed} times real-time`);
+        clearInterval(progInterval);
+        const processTimeSecs = (Date.now() - startTime) / 1000;
+        const speed = audioDuration / processTimeSecs;
+        console.log(`Transcription of ${audioDuration}s audio file took ${processTimeSecs}s - ${speed} times real-time`);
         isWorking = false;
         elLoaderTranscribing.style.display = 'none';
         updateButtonStates();
