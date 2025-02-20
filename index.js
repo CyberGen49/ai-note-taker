@@ -258,11 +258,14 @@ on(document, 'DOMContentLoaded', async() => {
     });
 
     on(btnDownloadTranscript, 'click', () => {
-        downloadTextFile('transcript.txt', inputTranscript.value);
+        const selectedFileName = elFileName.innerText.replace(/\.+$/, '');
+        let transcriptFileName = selectedFileName ? `${selectedFileName}-transcript.txt` : 'transcript.txt';
+        downloadTextFile(transcriptFileName, inputTranscript.value);
     });
 
     on(btnStartTranscription, 'click', async () => {
         isWorking = true;
+        let startTime = Date.now();
         updateButtonStates();
         elLoaderTranscribing.style.display = '';
         inputTranscript.disabled = true;
@@ -279,6 +282,10 @@ on(document, 'DOMContentLoaded', async() => {
                 `
             });
         }
+        const audioDuration = elAudio.duration || 1;
+        const transcribeTimeMs = (Date.now() - startTime) / 1000;
+        const speed = audioDuration / transcribeTimeMs;
+        console.log(`Transcription of ${audioDuration}s audio file took ${transcribeTimeMs}s - ${speed} times real-time`);
         isWorking = false;
         elLoaderTranscribing.style.display = 'none';
         updateButtonStates();
@@ -311,6 +318,7 @@ on(document, 'DOMContentLoaded', async() => {
 
     on(btnSummarize, 'click', async () => {
         isWorking = true;
+        let startTime = Date.now();
         updateButtonStates();
         elResult.innerText = 'Summarizing transcript, this may take a couple minutes...';
         elLoaderSummarizing.style.display = '';
@@ -343,6 +351,7 @@ on(document, 'DOMContentLoaded', async() => {
                 ]
             });
         }
+        console.log(`Summarization took ${Date.now() - startTime}ms`);
         isWorking = false;
         elResult.innerHTML = markdownToPureHtml(summaryText);
         localStorageSet('summary', summaryText);
@@ -351,7 +360,7 @@ on(document, 'DOMContentLoaded', async() => {
     });
 
     on(btnDownloadText, 'click', () => {
-        downloadTextFile('summary.md', summaryText || '');
+        downloadTextFile(`summary-${dayjs().format('YYYY-MM-DD-HHmm')}.md`, summaryText || '');
     });
 
     loadInputs();
