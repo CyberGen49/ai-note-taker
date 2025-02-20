@@ -106,7 +106,7 @@ on(document, 'DOMContentLoaded', async() => {
         btnPlayPause.disabled = true;
         btnStartTranscription.disabled = true;
         btnSummarize.disabled = true;
-        //btnDownloadText.disabled = true;
+        btnDownloadTranscript.disabled = true;
         btnDownloadHtml.disabled = true;
         const apiKey = localStorageGet('openaiApiKey');
         if (file) {
@@ -115,8 +115,11 @@ on(document, 'DOMContentLoaded', async() => {
                 btnStartTranscription.disabled = false;
             }
         }
-        if (!isWorking && inputTranscript.value.trim() && inputSummarizePrompt.value.trim() && apiKey) {
-            btnSummarize.disabled = false;
+        if (!isWorking) {
+            btnDownloadTranscript.disabled = false;
+            if (inputTranscript.value.trim() && inputSummarizePrompt.value.trim() && apiKey) {
+                btnSummarize.disabled = false;
+            }
         }
     };
 
@@ -263,22 +266,26 @@ on(document, 'DOMContentLoaded', async() => {
         downloadTextFile(transcriptFileName, inputTranscript.value);
     });
 
-    on(btnStartTranscription, 'click', async () => {
+    on(btnStartTranscription, 'click', async() => {
         isWorking = true;
         let startTime = Date.now();
         const audioDuration = elAudio.duration || 1;
-        const transcriptionSpeed = 26;
+        const transcriptionSpeed = 20; // x times real-time
+        const estProcessSecs = audioDuration / transcriptionSpeed;
         const progInterval = setInterval(() => {
             const secsSinceStart = (Date.now() - startTime) / 1000;
-            const secsRemaining = (audioDuration / transcriptionSpeed) - secsSinceStart;
-            console.log(`Transcribing ${audioDuration}s audio file - ${secsSinceStart}s elapsed, ${secsRemaining}s remaining`);
-        }, 500);
+            const secsRemaining = Math.max((audioDuration / transcriptionSpeed) - secsSinceStart, 0);
+            const percent = Math.min(100-(secsRemaining/estProcessSecs*100), 100);
+            console.log(`Transcribing ${audioDuration}s audio file - ${secsSinceStart}s elapsed, ${secsRemaining}s remaining (${percent}%)`);
+            $('progress', elLoaderTranscribing).value = percent;
+            $('.status', elLoaderTranscribing).innerText = `${Math.round(percent)}% (~${Math.round(secsRemaining)} secs remaining)`;
+        }, 100);
         updateButtonStates();
         elLoaderTranscribing.style.display = '';
         inputTranscript.disabled = true;
         let text = '';
         try {
-            inputTranscript.value = 'Generating transcript from audio, this may take a couple minutes...';
+            inputTranscript.value = 'Transcribing audio...';
             text = await whisperTranscribe(file);
         } catch (error) {
             showModal({
