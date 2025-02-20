@@ -278,7 +278,7 @@ on(document, 'DOMContentLoaded', async() => {
             const percent = Math.min(100-(secsRemaining/estProcessSecs*100), 100);
             console.log(`Transcribing ${audioDuration}s audio file - ${secsSinceStart}s elapsed, ${secsRemaining}s remaining (${percent}%)`);
             $('progress', elLoaderTranscribing).value = percent;
-            $('.status', elLoaderTranscribing).innerText = `${Math.round(percent)}% (~${Math.round(secsRemaining)} secs remaining)`;
+            $('.status', elLoaderTranscribing).innerText = `Transcribing ${Math.round(percent)}% -  About ${Math.round(secsRemaining)} secs remaining...`;
         }, 100);
         updateButtonStates();
         elLoaderTranscribing.style.display = '';

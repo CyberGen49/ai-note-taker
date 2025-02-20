@@ -89,9 +89,12 @@
                         <span class="material-symbol">library_books</span>
                         <span>Transcribe audio</span>
                     </button>
-                    <div id="loaderTranscribing" class="flex col grow" style="display: none; max-width: 500px">
-                        <progress min="0" max="100"></progress>
-                        <span class="status">Transcribing...</span>
+                    <div id="loaderTranscribing" class="flex row gap-12 grow align-center" style="display: none; max-width: 400px">
+                        <div class="loader" style="scale: 0.5; margin: -12px"></div>
+                        <div class="flex col grow">
+                            <progress min="0" max="100" value="0"></progress>
+                            <span class="status">Transcribing...</span>
+                        </div>
                     </div>
                 </div>
                 <div class="flex col gap-8">
