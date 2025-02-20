@@ -258,7 +258,7 @@ on(document, 'DOMContentLoaded', async() => {
     });
 
     on(btnDownloadTranscript, 'click', () => {
-        const selectedFileName = elFileName.innerText.replace(/\.+$/, '');
+        const selectedFileName = file ? file.name.replace(/\..*$/, '') : '';
         let transcriptFileName = selectedFileName ? `${selectedFileName}-transcript.txt` : 'transcript.txt';
         downloadTextFile(transcriptFileName, inputTranscript.value);
     });
