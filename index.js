@@ -47,6 +47,12 @@ const markdownToPureHtml = (markdown) => {
     return DOMPurify.sanitize(marked.parse(markdown));
 };
 
+const formatSecondsRough = (seconds) => {
+    const mins = Math.round(seconds / 60);
+    if (mins < 1) return 'Less than a minute';
+    return `About ${mins} minute${mins > 1 ? 's' : ''}`;
+};
+
 const promptPresets = [
     {
         name: 'Just format the transcript',
@@ -278,7 +284,7 @@ on(document, 'DOMContentLoaded', async() => {
             const percent = Math.min(100-(secsRemaining/estProcessSecs*100), 100);
             console.log(`Transcribing ${audioDuration}s audio file - ${secsSinceStart}s elapsed, ${secsRemaining}s remaining (${percent}%)`);
             $('progress', elLoaderTranscribing).value = percent;
-            $('.status', elLoaderTranscribing).innerText = `Transcribing ${Math.round(percent)}% -  About ${Math.round(secsRemaining)} secs remaining...`;
+            $('.status', elLoaderTranscribing).innerText = `Transcribing ${Math.round(percent)}% -  ${formatSecondsRough(secsRemaining)} remaining...`;
         }, 100);
         updateButtonStates();
         elLoaderTranscribing.style.display = '';
